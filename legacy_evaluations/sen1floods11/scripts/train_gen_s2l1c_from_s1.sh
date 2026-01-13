@@ -1,0 +1,29 @@
+#!/bin/bash
+
+echo -e "\033[31mTraining model on generated S2L1C ONLY (generated from S1) data\033[0m"
+
+CUDA_VISIBLE_DEVICES=0 torchrun --nnodes=1 --nproc_per_node=1 --master_port=29504 pangaea/run.py \
+   --config-name=train \
+   dataset=sen1floods11_192_s2_only \
+   dataset.root_path=./data/sen1floods11_v1.1/v1.1/outputs/GEN_S2L1C_FROM_S1 \
+   encoder=unet_encoder \
+   decoder=seg_unet \
+   preprocessing=seg_default \
+   criterion=cross_entropy \
+   task=segmentation \
+   finetune=True
+
+
+echo -e "\033[31mTraining model on generated S2L1C and real S1 data (generated from S1) data\033[0m"
+
+CUDA_VISIBLE_DEVICES=0 torchrun --nnodes=1 --nproc_per_node=1 --master_port=29504 pangaea/run.py \
+   --config-name=train \
+   dataset=sen1floods11_192 \
+   dataset.root_path=./data/sen1floods11_v1.1/v1.1/outputs/GEN_S2L1C_FROM_S1 \
+   encoder=unet_encoder \
+   decoder=seg_unet \
+   preprocessing=seg_default \
+   criterion=cross_entropy \
+   task=segmentation \
+   finetune=True
+

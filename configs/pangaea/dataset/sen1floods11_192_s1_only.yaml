@@ -1,0 +1,43 @@
+_target_: pangaea.datasets.sen1floods11.Sen1Floods11
+dataset_name: Sen1Floods11
+root_path: ./data/sen1floods11_v1.1
+download_url: 
+gcs_bucket: sen1floods11
+auto_download: True
+
+img_size: 192
+multi_temporal: False
+multi_modal: True
+
+ignore_index: -1
+num_classes: 2
+classes:
+  - Not Water
+  - Water
+distribution:
+  - 0.905
+  - 0.095
+
+bands:
+  sar:
+    - VV
+    - VH
+
+data_mean:
+  sar:
+    - -10.184408 
+    - -16.895273
+
+data_std:
+  sar:
+    - 4.255339 
+    - 5.290568
+
+data_max:
+  sar:
+    - 29.926394
+    - 17.376385
+data_min:
+  sar:
+    - -65.45004
+    - -79.161446

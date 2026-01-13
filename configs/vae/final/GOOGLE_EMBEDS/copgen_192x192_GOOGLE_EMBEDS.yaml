@@ -1,0 +1,16 @@
+# Config for training the VAE on ALL the S2L2A 10m bands: B04, B03, B02, B08
+
+data:
+  class_name: ddm.data.SatelliteDataset
+  image_size: [192, 192]
+  resize_to: [1068, 1068] # Because LULC was sampled at 1069x1069. To be fixed in the future.
+  # data_dir: "/gws/nopw/j04/sensecdt/data/internal/majorTOM/world/Core-GOOGLE_EMBEDS"
+  data_dir: "/tmp/majorTOM/world/Core-GOOGLE_EMBEDS"
+  tif_bands: ['GOOGLE_EMBEDS']
+  satellite_type: "GOOGLE_EMBEDS"
+  preprocess_bands: False
+  augment_horizontal_flip: False
+  center_crop: False
+  normalize_to_neg_one_to_one: False
+  batch_size: 4
+  num_workers: 4

@@ -1,0 +1,65 @@
+# Config for training the VAE on S1RTC VV and VH
+
+model:
+  class_name: ddm.encoder_decoder.AutoencoderKL
+  embed_dim: 8
+  lossconfig:
+    # perceptual_weight: 0.0  # Set this to zero to disable LPIPS
+    disc_start: 50001
+    kl_weight: 0.000001
+    disc_weight: 0.5
+    disc_in_channels: 2        # MATCH
+  ddconfig:
+    double_z: True
+    z_channels: 8
+    resolution: [ 192, 192 ]
+    in_channels: 2             # MATCH
+    out_ch: 2                  # MATCH
+    ch: 128
+    ch_mult: [ 1,2,4,4 ]  # num_down = len(ch_mult)-1
+    # E.g. if ch_mult = [1,2,4,8], then num_down = 3, so 256/2/2/2 = 32
+    # ch_mult: determines the increase in channels for each downsampling layer.
+    # E.g. if ch_mult = [1,2,4,4], then the number of channels will be 128 -> 256 -> 512 -> 512
+    num_res_blocks: 2
+    attn_resolutions: [ ]
+    dropout: 0.0
+  ckpt_path: #'/data/huang/pretrain_weights/ldm-ae/model-kl-d4.ckpt'
+
+data:
+  class_name: ddm.data.SatelliteDataset
+  image_size: [192, 192]
+  # data_dir: "/work/scratch-pw3/mespi/majorTOM/world/Core-S1RTC"  # Path to your satellite data
+  # data_dir: "/tmp/small_test/Core-S1RTC"  # Path to your satellite data
+  data_dir: "/tmp/majorTOM/world/Core-S1RTC"  # Path to your satellite data
+  # data_dir: "/localdisk/home/s2254242/datasets/majorTOM/small_world/Core-S1RTC"  # Path to your satellite data
+  tif_bands: ['vv', 'vh']
+  satellite_type: "S1RTC"                     # Type of satellite data
+  augment_horizontal_flip: True
+  center_crop: False
+  normalize_to_neg_one_to_one: True
+  min_db: -55.787186 # Values here should be computed with `python3 compute_min_max_s1.py --cfg configs/copgen/train/S1RTC/copgen_ae_kl_240x240_S1RTC_VV_VH_latent_8.yaml`
+  max_db: 40.225800  # Values here should be computed with `python3 compute_min_max_s1.py --cfg configs/copgen/train/S1RTC/copgen_ae_kl_240x240_S1RTC_VV_VH_latent_8.yaml`
+  min_positive: 2.6380407689430285e-06 # Values here should be computed with `python3 compute_min_max_s1.py --cfg configs/copgen/train/S1RTC/copgen_ae_kl_240x240_S1RTC_VV_VH_latent_8.yaml`
+  batch_size: 16
+  num_workers: 4
+
+trainer:
+  gradient_accumulate_every: 2
+  lr: !!float 5e-6
+  min_lr: !!float 1e-6
+  train_num_steps: 500000
+  save_and_sample_every: 10000
+  log_freq: 200
+  resume_milestone: 'last' # Used for resuming from a checkpoint
+  results_folder: './results/S1RTC_192x192_VV_VH_latent_8'
+  amp: False
+  fp16: False
+
+# Enable wandb logging
+wandb:
+  enabled: True
+  project: "satellite-vae"
+  name: "S1RTC_192x192_VV_VH_latent_8"
+  entity: "mespinosami"
+  tags: ["S1RTC", "VV_VH", "VAE"]
+  log_images: True 

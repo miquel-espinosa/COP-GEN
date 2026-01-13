@@ -1,0 +1,51 @@
+dataset_yaml_path: configs/pangaea/dataset/sen1floods11.yaml
+
+crop_size: 192 # Return all bands to this size
+resize: True # It will resize bands that are not in native resolution to native resolution
+
+modality_mapping:
+  S2L2A_B01_B09: optical
+  S2L2A_B02_B03_B04_B08: optical
+  S2L2A_B05_B06_B07_B11_B12_B8A: optical
+  S2L1C_B01_B09_B10: optical
+  S2L1C_B02_B03_B04_B08: optical
+  S2L1C_B05_B06_B07_B11_B12_B8A: optical
+  S1RTC_vh_vv: sar
+  mean_timestamps: timestamp
+
+band_mapping:
+  S2L2A_B01_B09:
+    B01: B1
+    B09: B9
+  S2L2A_B02_B03_B04_B08:
+    B04: B4
+    B03: B3
+    B02: B2
+    B08: B8
+  S2L2A_B05_B06_B07_B11_B12_B8A:
+    B05: B5
+    B06: B6
+    B07: B7
+    B8A: B8A
+    B11: B11
+    B12: B12
+  S2L1C_B01_B09_B10:
+    B01: B1
+    B09: B9
+    B10: B10
+  S2L1C_B02_B03_B04_B08:
+    B04: B4
+    B03: B3
+    B02: B2
+    B08: B8
+  S2L1C_B05_B06_B07_B11_B12_B8A:
+    B05: B5
+    B06: B6
+    B07: B7
+    B8A: B8A
+    B11: B11
+    B12: B12
+  S1RTC_vh_vv:
+    vv: VV
+    vh: VH
+  
