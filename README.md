@@ -3,7 +3,7 @@
 # 🌍 COP-GEN: Latent Diffusion Transformer for Copernicus Earth Observation Data -- Generation Stochastic by Design.
 
 [![HF](https://img.shields.io/badge/%F0%9F%A4%97-Demo-yellow)](https://huggingface.co/spaces/mikonvergence/COP-GEN)
-[![GitHub](https://img.shields.io/badge/%E2%80%8B-COP--GEN-black?logo=github)](https://github.com/mespinosami/COP-GEN)
+[![GitHub](https://img.shields.io/badge/%E2%80%8B-COP--GEN-black?logo=github)](https://github.com/miquel-espinosa/COP-GEN)
 [![website](https://img.shields.io/badge/🌐-Website-grey)](https://miquel-espinosa.github.io/cop-gen/)
 [![HF Models](https://img.shields.io/badge/%F0%9F%A4%97-Models-yellow)](https://huggingface.co/mespinosami/copgen-base)
 [![HF Dataset](https://img.shields.io/badge/%F0%9F%A4%97-Dataset-yellow)](https://huggingface.co/datasets/mespinosami/copgen-edinburgh-subset)
