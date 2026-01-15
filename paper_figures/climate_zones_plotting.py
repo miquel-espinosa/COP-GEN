@@ -36,7 +36,8 @@ import rasterio
 from rasterio.crs import CRS
 from rasterio.enums import Resampling
 from rasterio.merge import merge
-from rasterio.warp import reproject, calculate_default_transform
+from rasterio.transform import array_bounds, from_origin
+from rasterio.warp import reproject
 import requests
 from shapely.geometry import shape
 
@@ -386,6 +387,18 @@ def parse_args() -> argparse.Namespace:
             "0.0 = same colors as CopGen, 0.5 = complementary colors."
         ),
     )
+    parser.add_argument(
+        "--copgen-color",
+        type=str,
+        default=None,
+        help="Optional hex color (e.g., #1f77b4) to use for CopGen points in comparison mode.",
+    )
+    parser.add_argument(
+        "--terramind-color",
+        type=str,
+        default=None,
+        help="Optional hex color (e.g., #ff7f0e) to use for TerraMind points in comparison mode.",
+    )
     return parser.parse_args()
 
 
@@ -641,7 +654,9 @@ def load_population_raster_array(
     # Check for cached resampled version
     cache_key = f"{target_res_deg:.3f}".replace(".", "p")
     source_basename = os.path.splitext(os.path.basename(source_path))[0]
-    cache_file = os.path.join(resolved_dir, f"population_{source_basename}_res_{cache_key}.npz")
+    cache_file = os.path.join(
+        resolved_dir, f"population_{source_basename}_res_{cache_key}_v2.npz"
+    )
 
     if os.path.exists(cache_file):
         print(f"Loading cached population raster from {cache_file}")
@@ -652,17 +667,22 @@ def load_population_raster_array(
 
     with rasterio.open(source_path) as src:
         # Calculate output dimensions for global extent at target resolution
-        out_width = int(360.0 / target_res_deg)
-        out_height = int(180.0 / target_res_deg)
+        out_width = int(round(360.0 / target_res_deg))
+        out_height = int(round(180.0 / target_res_deg))
 
-        # Read and resample to global grid
+        # Build a fixed global grid to avoid projection shifts
         dst_crs = CRS.from_epsg(4326)
-        dst_transform, dst_width, dst_height = calculate_default_transform(
-            src.crs, dst_crs,
-            src.width, src.height,
-            *src.bounds,
-            dst_width=out_width, dst_height=out_height
-        )
+        use_lon_wrap = False
+        if src.crs is not None and src.crs == dst_crs:
+            bounds = src.bounds
+            if bounds.left >= 0 and bounds.right > 180:
+                use_lon_wrap = True
+
+        if use_lon_wrap:
+            print("Detected 0–360° population raster; wrapping to -180..180.")
+            dst_transform = from_origin(0.0, 90.0, target_res_deg, target_res_deg)
+        else:
+            dst_transform = from_origin(-180.0, 90.0, target_res_deg, target_res_deg)
 
         # Create output array
         arr = np.empty((out_height, out_width), dtype=np.float32)
@@ -679,12 +699,19 @@ def load_population_raster_array(
             dst_nodata=np.nan,
         )
 
+        if use_lon_wrap:
+            arr = np.roll(arr, shift=out_width // 2, axis=1)
+
     # Handle nodata and negative values
     arr = np.where(arr < 0, np.nan, arr)
     # Clip extreme values (some datasets have artifacts)
     arr = np.clip(arr, 0, np.nanpercentile(arr[np.isfinite(arr)], 99.9))
 
-    extent = (-180.0, 180.0, -90.0, 90.0)
+    if use_lon_wrap:
+        extent = (-180.0, 180.0, -90.0, 90.0)
+    else:
+        left, bottom, right, top = array_bounds(arr.shape[0], arr.shape[1], dst_transform)
+        extent = (left, right, bottom, top)
     np.savez_compressed(cache_file, image=arr, extent=np.array(extent, dtype=np.float32))
     print(f"Cached resampled population raster to {cache_file}")
 
@@ -1130,6 +1157,8 @@ def plot_comparison(
     treecover_basemap: Optional[Dict[str, object]],
     legend_loc: str,
     terramind_hue_offset: Optional[float] = None,
+    copgen_color: Optional[Tuple[float, float, float]] = None,
+    terramind_color: Optional[Tuple[float, float, float]] = None,
 ) -> None:
     """Plot comparison of CopGen and TerraMind predictions on the same map."""
     fig, ax = plt.subplots(figsize=(16, 10), subplot_kw={"projection": ccrs.PlateCarree()})
@@ -1240,14 +1269,16 @@ def plot_comparison(
         ("terramind", terramind_data, MODEL_MARKERS["terramind"]),
     ]
 
-    # Determine color mode: tab10 (default) or hue-shifted LULC colors
-    use_tab10 = terramind_hue_offset is None
+    # Determine color mode: fixed model color, tab10 (default), or hue-shifted LULC colors
+    use_fixed_colors = copgen_color is not None or terramind_color is not None
+    use_tab10 = terramind_hue_offset is None and not use_fixed_colors
     if use_tab10:
         tab10_cmap = plt.get_cmap("tab10")
         color_idx = 0
 
     for model_name, data, marker_info in model_data:
         hue_offset = 0.0 if model_name == "copgen" else (terramind_hue_offset or 0.0)
+        fixed_color = copgen_color if model_name == "copgen" else terramind_color
         for class_key, latlons in data.items():
             if len(latlons) == 0:
                 continue
@@ -1258,7 +1289,9 @@ def plot_comparison(
                 continue
 
             # Choose color based on mode
-            if use_tab10:
+            if fixed_color is not None:
+                plot_color = fixed_color
+            elif use_tab10:
                 # Use tab10 colormap for distinct colors per (model, class)
                 plot_color = tab10_cmap(color_idx % 10)[:3]  # RGB only, no alpha
                 color_idx += 1
@@ -1324,6 +1357,16 @@ def main() -> None:
         raise ValueError("--treecover-res-deg must be greater than zero.")
     if args.terramind_hue_offset is not None and not (0.0 <= args.terramind_hue_offset <= 1.0):
         raise ValueError("--terramind-hue-offset must be within [0, 1].")
+    if args.copgen_color is not None:
+        try:
+            mcolors.to_rgb(args.copgen_color)
+        except ValueError as exc:
+            raise ValueError(f"Invalid --copgen-color '{args.copgen_color}': {exc}") from exc
+    if args.terramind_color is not None:
+        try:
+            mcolors.to_rgb(args.terramind_color)
+        except ValueError as exc:
+            raise ValueError(f"Invalid --terramind-color '{args.terramind_color}': {exc}") from exc
 
     # Validate and select classes using unified class system
     valid_keys = sorted(LULC_CLASS_BY_KEY.keys())
@@ -1543,6 +1586,8 @@ def main() -> None:
             treecover_basemap=treecover_basemap,
             legend_loc=legend_loc,
             terramind_hue_offset=args.terramind_hue_offset,
+            copgen_color=mcolors.to_rgb(args.copgen_color) if args.copgen_color else None,
+            terramind_color=mcolors.to_rgb(args.terramind_color) if args.terramind_color else None,
         )
     else:
         plot_lat_lon_by_class(
