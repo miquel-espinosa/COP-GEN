@@ -8,6 +8,7 @@
 [![HF Models](https://img.shields.io/badge/%F0%9F%A4%97-Models-yellow)](https://huggingface.co/mespinosami/copgen-base)
 [![HF Dataset](https://img.shields.io/badge/%F0%9F%A4%97-Dataset-yellow)](https://huggingface.co/datasets/mespinosami/copgen-edinburgh-subset)
 [![HF Collection](https://img.shields.io/badge/%F0%9F%A4%97-Collection-yellow)](https://huggingface.co/collections/mespinosami/copgen)
+[![paper](https://img.shields.io/badge/arXiv-2402.12095-D12424)](https://www.arxiv.org/abs/2603.03239)
 
 ---
 
