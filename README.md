@@ -751,6 +751,19 @@ Results (checkpoints and visualisations) are stored in `./workdir/copgen/discret
 
 Test set used for evaluation is available in Hugging Face: https://huggingface.co/datasets/mespinosami/copgen-test-dataset (495 images).
 
+### 4.1. Stochastic benchmark 🎲
+
+To reproduce the distribution-level results reported in Section 4 of the paper (Table 1):
+
+```bash
+pip install -r benchmark/stochastic/requirements.txt
+python -m benchmark.stochastic.run --output metrics.csv
+```
+
+The first run downloads ~72 GB from HuggingFace and caches it locally; subsequent runs are faster. Expected runtime is ~20 minutes on a single A100 GPU.
+
+See [`benchmark/stochastic/README.md`](benchmark/stochastic/README.md) for full details (canonical seed subsample, determinism guarantees, per-metric documentation).
+
 ---
 
 # 📖 Citation
