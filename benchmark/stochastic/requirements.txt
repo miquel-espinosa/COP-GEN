@@ -1,0 +1,12 @@
+datasets>=2.14
+huggingface_hub>=0.20
+rasterio>=1.3
+numpy>=1.24
+pandas>=2.0
+scipy>=1.11
+scikit-image>=0.21
+torch>=2.0
+torchvision>=0.15
+lpips>=0.1.4
+tqdm>=4.65
+Pillow>=10.0
