@@ -173,7 +173,7 @@ python examples/unconditional_generation.py
 
 ### 1. (Optional) Create your own dataset from scratch
 
-To facilitate rapid development, we provide a pre-compiled small dataset for Edinburgh. See section [Download example pre-compiled dataset (Edinburgh 🏰)](#23-download-example-pre-compiled-dataset-edinburgh-🏰) for more details.
+To facilitate rapid development, we provide a pre-compiled small dataset for Edinburgh. See section [Download example pre-compiled dataset (Edinburgh 🏰)](#23-download-example-pre-compiled-dataset-edinburgh-) for more details.
 
 <details>
 <summary>🔧 (Click to expand) If you want to <b>create the dataset from scratch</b>, you can follow the steps below</summary>
