@@ -771,10 +771,13 @@ See [`benchmark/stochastic/README.md`](benchmark/stochastic/README.md) for full 
 If you find this work useful, please cite it as follows:
 
 ```bibtex
-@inproceedings{espinosa2025copgen,
-  title={},
-  author={},
-  booktitle={Conference},
-  year={2025}
+@article{copgen2026,
+    title   = {COP-GEN: Latent Diffusion Transformer for Copernicus Earth
+               Observation Data -- Generation Stochastic by Design},
+    author  = {Espinosa, Miguel and Gmelich Meijling, Eva and Marsocci,
+               Valerio and Crowley, Elliot J. and Czerkawski, Mikolaj},
+    year    = {2026},
+    journal = {arXiv preprint arXiv:2603.03239},
+    url     = {https://arxiv.org/abs/2603.03239},
 }
 ```
