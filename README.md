@@ -23,8 +23,8 @@
 - [🏋️ Training COP-GEN](#️-training-cop-gen)
   - [1. Create Your Own Dataset (Optional)](#1-optional-create-your-own-dataset-from-scratch)
   - [2. VAE Training](#2-vae)
-  - [3. Training COP-GEN Diffusion Backbone](#3-training-cop-gen-diffusion-backbone)
-  - [4. Evaluation](#4-evaluation)
+  - [3. Training COP-GEN Diffusion Backbone](#3-training-cop-gen-diffusion-backbone-)
+  - [4. Evaluation](#4-evaluation-)
 - [📖 Citation](#-citation)
 
 ---
