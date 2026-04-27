@@ -773,7 +773,7 @@ If you find this work useful, please cite it as follows:
 ```bibtex
 @article{copgen2026,
     title   = {COP-GEN: Latent Diffusion Transformer for Copernicus Earth
-               Observation Data -- Generation Stochastic by Design},
+               Observation Data},
     author  = {Espinosa, Miguel and Gmelich Meijling, Eva and Marsocci,
                Valerio and Crowley, Elliot J. and Czerkawski, Mikolaj},
     year    = {2026},
