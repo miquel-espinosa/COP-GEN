@@ -1,6 +1,6 @@
 ![COP-GEN Banner](images/copgen-banner-github.png)
 
-# 🌍 COP-GEN: Latent Diffusion Transformer for Copernicus Earth Observation Data -- Generation Stochastic by Design.
+# 🌍 COP-GEN: Latent Diffusion Transformer for Copernicus Earth Observation Data
 
 [![HF Models](https://img.shields.io/badge/%F0%9F%A4%97-Model-yellow)](https://huggingface.co/mespinosami/copgen-base)
 [![GitHub](https://img.shields.io/badge/%E2%80%8B-COP--GEN-black?logo=github)](https://github.com/miquel-espinosa/COP-GEN)
