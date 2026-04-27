@@ -2,12 +2,12 @@
 
 # 🌍 COP-GEN: Latent Diffusion Transformer for Copernicus Earth Observation Data -- Generation Stochastic by Design.
 
-[![HF](https://img.shields.io/badge/%F0%9F%A4%97-Demo-yellow)](https://huggingface.co/spaces/mikonvergence/COP-GEN)
+[![HF Models](https://img.shields.io/badge/%F0%9F%A4%97-Model-yellow)](https://huggingface.co/mespinosami/copgen-base)
 [![GitHub](https://img.shields.io/badge/%E2%80%8B-COP--GEN-black?logo=github)](https://github.com/miquel-espinosa/COP-GEN)
 [![website](https://img.shields.io/badge/🌐-Website-grey)](https://miquel-espinosa.github.io/cop-gen/)
-[![HF Models](https://img.shields.io/badge/%F0%9F%A4%97-Models-yellow)](https://huggingface.co/mespinosami/copgen-base)
-[![HF Dataset](https://img.shields.io/badge/%F0%9F%A4%97-Dataset-yellow)](https://huggingface.co/datasets/mespinosami/copgen-edinburgh-subset)
-[![HF Collection](https://img.shields.io/badge/%F0%9F%A4%97-Collection-yellow)](https://huggingface.co/collections/mespinosami/copgen)
+[![HF Dataset](https://img.shields.io/badge/%F0%9F%A4%97-Benchmark-yellow)](https://huggingface.co/datasets/Major-TOM/COP-GEN-Benchmark)
+[![HF](https://img.shields.io/badge/%F0%9F%A4%97-Subset-yellow)](https://huggingface.co/datasets/mespinosami/copgen-edinburgh-subset)
+[![HF Collection](https://img.shields.io/badge/%F0%9F%A4%97-HFCollection-yellow)](https://huggingface.co/collections/mespinosami/copgen)
 [![paper](https://img.shields.io/badge/arXiv-2402.12095-D12424)](https://www.arxiv.org/abs/2603.03239)
 
 ---
